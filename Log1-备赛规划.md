@@ -75,3 +75,47 @@ Vivado2018.3提前下载好，附一个网盘链接：这个是我自己的资�
 egrep -c '(vmx|svm)' /proc/cpuinfo
 ```
 ![安装步骤14](pic/日志1/p14.png)
+
+## 三、Linux宿主环境配置
+执行以下代码，以sudo执行指令，终端第一次会要求我们输入密码，凭感觉输入正确，回车即可。
+```bash
+sudo bash -c "cat > /etc/apt/sources.list << 'EOF'
+deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+EOF"
+
+# 更新软件列表
+sudo apt update
+```
+
+执行下面的命令后，会弹出灰蓝色界面，选择no，我们要使用更全能的bash终端，而不是更快捷的dash终端
+```bash
+sudo dpkg-reconfigure dash
+```
+
+添加32位架构支持，因为petalinux2018有点老，可能有些地方会依赖32位架构的编译器
+```bash
+sudo dpkg --add-architecture i386
+sudo apt update
+```
+
+安装Petalinux的依赖包
+```bash
+sudo apt install -y tofrodos iproute2 gawk gcc g++ git make net-tools libncurses5-dev tftpd zlib1g-dev libssl-dev libselinux1 flex bison libstdc++6 zlib1g:i386 xvfb autoconf libtool automake lib32z1 lib32ncurses5 lib32stdc++6 chrpath socat xterm python texinfo gcc-multilib build-essential libsdl1.2-dev libglib2.0-dev
+```
+
+配置TFTP服务
+```bash
+sudo apt install -y tftpd-hpa
+sudo systemctl enable tftpd-hpa
+sudo systemctl start tftpd-hpa
+```
+
+关闭后台自动更新功能(防干扰)
+```bash
+sudo dpkg-reconfigure unattended-upgrades
+```
+
