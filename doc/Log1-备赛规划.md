@@ -23,21 +23,21 @@
 Vivado2018.3提前下载好，附一个网盘链接：这个是我自己的资源，永久有效。
 运行setup.exe，一路next，软件让我们用更新版不要用，然后选择HL完全版，后面会自动打开许可证管理器，把lic文件解压后，在管理器里面选择许可证就OK了。记得选芯片的时候选上zynq7000s系列。  
 [Vivado 2018.3](https://pan.baidu.com/s/1ckFiUfEyuy1f_mMK6MZKCw?pwd=9999)
-![安装步骤1](pic/日志1/p1.png)
-![安装步骤2](pic/日志1/p2.png)
+![安装步骤1](../pic/日志1/p1.png)
+![安装步骤2](../pic/日志1/p2.png)
 
 **开始构建虚拟机！！**  
 因为Petalinux一定是运行在Linux系统里面的工具，所以我们要创建一个linux虚拟机，又因为AMD官方给Petalinux2018指定的优化好的linux系统是Ubuntu2018，且2018.04是Ubuntu最后的更新版本并且维护的很好，所以就用它了~~(如果使用更新的版本，比如20.04，会遇到一大堆问题，这里我踩坑的图片就不放出来了)
 点击下方链接，直达清华镜像站，下载Ubuntu的镜像文件。
 [Ubuntu2018.04.6](https://mirrors.tuna.tsinghua.edu.cn/)
-![安装步骤3](pic/日志1/p3.png)
-![安装步骤4](pic/日志1/p4.png)
-![安装步骤5](pic/日志1/p5.png)
+![安装步骤3](../pic/日志1/p3.png)
+![安装步骤4](../pic/日志1/p4.png)
+![安装步骤5](../pic/日志1/p5.png)
 
 安装虚拟机的时候，选择经典引导方式，然后选中自己的镜像文件，然后配置起码200GB存储，8GB内存，1个8核的CPU处理器
 
-![安装步骤6](pic/日志1/P6.png)
-![安装步骤7](pic/日志1/p7.png)
+![安装步骤6](../pic/日志1/P6.png)
+![安装步骤7](../pic/日志1/p7.png)
 
 上面这张图片很重要，先不勾选虚拟化处理器，正常创建虚拟机，如果能打开虚拟机(如果打不开的话我也没办法了，上网求助吧)，就再回来把它勾上！  
 勾上之后，如果打不开了并显示无法虚拟化处理器，那就是很正常情况，因为Windows宿主默认独占了这个虚拟化处理器的功能，这样会导致我们的虚拟机性能很差，没法直接调用CPU的底层硬件，严重拖累后期的编译。一般经常使用虚拟机的开发人员都会把这个虚拟化功能释放给虚拟机（这样做其实是即增强了宿主的性能，也增强了虚拟机的性能，因为宿主不需要运行一段很底层的程序来维持这个独占的功能，并且我们的虚拟机也可以调用底层的硬件了。之所以还有这个事儿，是因为这个功能提高了主机的安全性，避免恶意软件插入到我们的高优先级进程中，其实目的是保护一般用户的，我们开发人员很少会让自己的电脑被入侵：如果你担心自己被流氓软件绑架的话当我没说）
@@ -47,34 +47,34 @@ Vivado2018.3提前下载好，附一个网盘链接：这个是我自己的资�
 
 只能把win10和win11的家庭版升为专业版，不可以把win10变成win11(这是需要刷机的)，依次点击两个按钮就OK啦！
 
-![安装步骤8](pic/日志1/p8.png)
+![安装步骤8](../pic/日志1/p8.png)
 
 接下来，我们的主机就是可以关闭虚拟化功能的了(但是还没有关闭)
 先去Windows官网下载一个插件，这是官方指定的关闭虚拟化功能的工具。
 [Device Guard](https://www.microsoft.com/en-us/download/details.aspx?id=53337)
 
-![安装步骤9](pic/日志1/p9.png)
-![安装步骤10](pic/日志1/p10.png)
+![安装步骤9](../pic/日志1/p9.png)
+![安装步骤10](../pic/日志1/p10.png)
 
 插件下载后，打开管理员终端，先进入安装插件的目录，输入下方指令，回车即可
 ```powershell
 .\DG_Readiness_Tool_v3.6.ps1 -Disable
 ```
 只要最后提示让我们重启电脑让配置生效即可
-![安装步骤11](pic/日志1/p11.png)
+![安装步骤11](../pic/日志1/p11.png)
 
 重启电脑，然后WIN+R，再输入msinfo32，进入系统信息查看界面，如果选项‘基于虚拟化的安全性’右侧是‘未启用’，就可以了！当然重启的时候，电脑屏幕会有提示你是否真的要关闭安全保护功能，我们顺着提示选择确认即可。然后重新打开虚拟机，就好了。
-![安装步骤12](pic/日志1/p12.png)
+![安装步骤12](../pic/日志1/p12.png)
 
 虚拟机开启过程中可能有各种提示，我们不管不顾，只要能打开虚拟机，能打开控制台就好~~
 
-![安装步骤13](pic/日志1/p13.png)
+![安装步骤13](../pic/日志1/p13.png)
 
 在虚拟机终端执行以下指令，如果结果不是0，而是和我们设置的CPU数量一致，就说明所有核心均已经可以调用底层硬件执行编译功能了。
 ```bash
 egrep -c '(vmx|svm)' /proc/cpuinfo
 ```
-![安装步骤14](pic/日志1/p14.png)
+![安装步骤14](../pic/日志1/p14.png)
 
 ## 三、Linux宿主环境配置
 执行以下代码，以sudo执行指令，终端第一次会要求我们输入密码，凭感觉输入正确，回车即可。
@@ -119,3 +119,63 @@ sudo systemctl start tftpd-hpa
 sudo dpkg-reconfigure unattended-upgrades
 ```
 
+## 四、安装Petalinux
+安装包链接如下
+安装.run文件，通过共享文件夹传递给虚拟机，然后直接在虚拟机内运行即可
+
+[Petalinux2018&SDK](https://pan.baidu.com/s/1FJeUssUGe26BC73meVuAxw?pwd=9999)
+![安装步骤15](../pic/日志1/p15.png)
+![安装步骤17](../pic/日志1/p17.png)
+![安装步骤16](../pic/日志1/p16.png)
+
+对于ubuntu2018以及更新版本而言，其官方已经自备一套标准工具来对接共享文件，所以如果不安装开源tools的话，可能在虚拟机文件夹中看不到共享文件。可能没有下方这个hgfs文件夹
+![安装步骤18](../pic/日志1/p18.png)
+
+在终端执行以下bash命令
+``` bash
+#安装VMware工具
+sudo apt update
+sudo apt install open-vm-tools open-vm-tools-desktop -y
+
+# 创建挂载点（如果已存在也不会报错）
+sudo mkdir -p /mnt/hgfs
+# 手动挂载（注意：整行复制，包含 -o 后面的参数）
+sudo /usr/bin/vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other -o uid=1000 -o gid=1000 -o umask=022
+# 验证以下，这里可以看到那个共享文件夹就对了
+ls /mnt/hgfs/
+
+# 配置开机自动挂载，打开配置文件
+sudo nano /etc/fstab
+# 使用键盘将光标移动到文件的最底部并另起一行
+.host:/ /mnt/hgfs fuse.vmhgfs-fuse allow_other,defaults,uid=1000,gid=1000,umask=022 0 0
+
+# 先卸载刚才手动挂载的目录
+sudo umount /mnt/hgfs
+# 重新读取 fstab 自动挂载
+sudo mount -a
+# 检查是否有文件
+ls /mnt/hgfs/
+```
+小tip：输入路径时，可以只打出前几个字母，比如输入cp /mnt/hgfs/Pe然后按一下键盘上的Tab键，系统会自动帮你补全后面的名字，这样就不会拼错了
+``` bash
+# 把安装包从共享文件夹中拷到虚拟机本地，安装会快很多，注意路径要和自己的一样。 
+cp /mnt/hgfs/PetaLinux_share/petalinux-v2018.3-final-installer.run ~/
+```
+
+在Linux中，可执行文件都是没有运行许可的，需要我们手动赋予执行权限，避免“双击毁一生”
+``` bash
+# 赋执行权限
+chmod +x ~/petalinux-v2018.3-final-installer.run
+
+# 运行安装（老版本不需要 -d 参数）
+./petalinux-v2018.3-final-installer.run ~/peta_workspace/petalinux
+```
+安装完成后有个协议，顺着点确定就OK。
+最后在把环境变量配置好。
+
+``` bash
+# 把petalinux的说明书写进开机自启动文件
+echo "source ~/peta_workspace/petalinux/settings.sh" >> ~/.bashrc
+#让前一句设置立刻生效
+source ~/.bashrc
+```
